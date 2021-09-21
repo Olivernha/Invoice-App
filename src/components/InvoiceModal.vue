@@ -109,7 +109,7 @@
         </div>
         <div class="input flex flex-column">
           <label for="paymentTerms">Payment Terms</label>
-          <select required type="text" id="paymentTerms" v-model="paymentTerms">
+          <select required  id="paymentTerms" v-model="paymentTerms">
             <option value="30">Net 30 Days</option>
             <option value="60">Net 60 Days</option>
           </select>
@@ -167,23 +167,13 @@
           </button>
         </div>
         <div class="right flex">
-          <button
-            v-if="!editInvoice"
-            type="submit"
-            @click="saveDraft"
-            class="dark-purple"
-          >
+          <button type="submit" @click="saveDraft" class="dark-purple">
             Save Draft
           </button>
-          <button
-            v-if="!editInvoice"
-            type="submit"
-            @click="publishInvoice"
-            class="purple"
-          >
+          <button type="submit" @click="publishInvoice" class="purple">
             Create Invoice
           </button>
-          <button v-if="editInvoice" type="sumbit" class="purple">
+          <button type="sumbit" class="purple">
             Update Invoice
           </button>
         </div>
@@ -194,6 +184,8 @@
 
 <script>
 import { reactive, toRefs } from "vue";
+import { useStore } from "vuex";
+
 export default {
   name: "InvoiceModal",
   setup() {
@@ -222,8 +214,11 @@ export default {
       invoiceItemList: [],
       invoiceTotal: 0,
     });
+    const store = useStore();
+    const closeInvoice = () => store.commit("TOGGLE_INVOICE");
     return {
       ...toRefs(data),
+      closeInvoice,
     };
     // const billerStreetAddress = ref(null);
     // const billerCity = ref(null);
@@ -270,7 +265,8 @@ export default {
     width: 100%;
     background-color: #141625;
     color: #fff;
-    box-shadow: 10px 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 10px 4px 6px -1px rgba(0, 0, 0, 0.2),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
     h1 {
       margin-bottom: 48px;
       color: #fff;

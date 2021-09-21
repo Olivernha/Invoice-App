@@ -7,7 +7,7 @@
       </div>
 
       <div class="right flex">
-        <div @click="toggleFilterMenu" class="filter flex" >
+        <div @click="toggleFilterMenu" class="filter flex">
           <span>Filter by status</span>
           <img src="@/assets/icon-arrow-down.svg" alt="" />
           <ul class="filter-menu" v-show="filterMenu">
@@ -29,24 +29,25 @@
 
 <script>
 // @ is an alias to /src
-import { ref } from 'vue';
+import { ref } from "vue";
+import { useStore } from "vuex";
 export default {
   name: "Home",
-  components: {
-
-  },
-  setup(){
+  components: {},
+  setup() {
     const filterMenu = ref(null);
-    function newInvoice(){
+    const store = useStore();
+    const newInvoice = () => store.commit("TOGGLE_INVOICE");
+    const toggleFilterMenu = () => {
+      filterMenu.value = !filterMenu.value;
+    };
 
-    }
-    function toggleFilterMenu(){
-      filterMenu.value =  !filterMenu.value;
-    }
     return {
-      filterMenu , toggleFilterMenu , newInvoice
-    }
-  }
+      filterMenu,
+      toggleFilterMenu,
+      newInvoice,
+    };
+  },
 };
 </script>
 
@@ -100,6 +101,7 @@ export default {
       .button {
         padding: 8px 10px;
         background-color: #7c5dfa;
+      
         border-radius: 40px;
         .inner-button {
           margin-right: 8px;

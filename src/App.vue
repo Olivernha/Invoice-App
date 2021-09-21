@@ -1,42 +1,45 @@
 <template>
-    <div v-if="!mobile" class="app flex flex-column">
-      <Navigation />
-      <div class="app-content flex flex-column">
-       <invoice-modal></invoice-modal>
-        <router-view />
-      </div>
+  <div v-if="!mobile" class="app flex flex-column">
+    <Navigation />
+    <div class="app-content flex flex-column">
+      <invoice-modal v-if="invoiceModal"></invoice-modal>
+      <router-view />
     </div>
-    <div v-else class="mobile-message flex flex-column">
-      <h2>Sorry, this app is not supported on Mobile Devices</h2>
-      <p>To use this app, please use a computer or Tablet</p>
-    </div>
-
+  </div>
+  <div v-else class="mobile-message flex flex-column">
+    <h2>Sorry, this app is not supported on Mobile Devices</h2>
+    <p>To use this app, please use a computer or Tablet</p>
+  </div>
 </template>
 
 <script>
-
 import Navigation from "./components/Navigation";
 
-import { ref } from 'vue';
-import InvoiceModal from './components/InvoiceModal.vue';
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
+import InvoiceModal from "./components/InvoiceModal.vue";
 export default {
-  components:{Navigation,InvoiceModal},
-  setup(){
+  components: { Navigation, InvoiceModal },
+  setup() {
     const mobile = ref(null);
+    const store = useStore();
     const checkScreen = () => {
       const windowWidth = window.innerWidth;
-       if (windowWidth <= 750) {
-        mobile.value= true;
+      if (windowWidth <= 750) {
+        mobile.value = true;
         return;
       }
-    mobile.value = false;
-    }
-
-    window.addEventListener('resize',checkScreen);
+      mobile.value = false;
+    };
+    const invoiceModal = computed(() => store.state.invoiceModal); // ref
+    
+    window.addEventListener("resize", checkScreen);
     return {
-      mobile, checkScreen
-    }
-  }
+      mobile,
+      checkScreen,
+      invoiceModal,
+    };
+  },
 };
 </script>
 
