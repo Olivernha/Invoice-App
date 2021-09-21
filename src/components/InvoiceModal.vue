@@ -239,26 +239,7 @@ export default {
       ...toRefs(data),
       closeInvoice,
     };
-    // const billerStreetAddress = ref(null);
-    // const billerCity = ref(null);
-    // const billerZipCode = ref(null);
-    // const billerCountry = ref(null);
-    // const clientName = ref(null);
-    // const clientEmail = ref(null);
-    // const clientStreetAddress = ref(null);
-    // const clientCity = ref(null);
-    // const clientZipCode = ref(null);
-    // const clientCountry = ref(null);
-    // const invoiceDateUnix = ref(null);
-    // const invoiceDate = ref(null);
-    // const paymentTerms = ref(null);
-    // const paymentDueDateUnix = ref(null);
-    // const paymentDueDate = ref(null);
-    // const productDescription = ref(null);
-    // const invoicePending = ref(null);
-    // const invoiceDraft = ref(null);
-    // const invoiceItemList = ref([]);
-    // const invoiceTotal = ref(0);
+   
   },
 };
 </script>
