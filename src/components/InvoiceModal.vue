@@ -109,7 +109,7 @@
         </div>
         <div class="input flex flex-column">
           <label for="paymentTerms">Payment Terms</label>
-          <select required  id="paymentTerms" v-model="paymentTerms">
+          <select required id="paymentTerms" v-model="paymentTerms">
             <option value="30">Net 30 Days</option>
             <option value="60">Net 60 Days</option>
           </select>
@@ -183,7 +183,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from "vue";
+import { reactive, toRefs, watch } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -216,6 +216,25 @@ export default {
     });
     const store = useStore();
     const closeInvoice = () => store.commit("TOGGLE_INVOICE");
+
+    data.invoiceDateUnix = Date.now();
+    data.invoiceDate = new Date(data.invoiceDateUnix).toLocaleDateString(
+      "en-us",
+      data.dateOptions
+    );
+
+    watch(
+      () => data.paymentTerms,
+      () => {
+        const futureDate = new Date();
+        data.paymentDueDateUnix = futureDate.setDate(
+          futureDate.getDate() + parseInt(data.paymentTerms)
+        );
+        data.paymentDueDate = new Date(
+          data.paymentDueDateUnix
+        ).toLocaleDateString("en-us", data.dateOptions);
+      }
+    );
     return {
       ...toRefs(data),
       closeInvoice,

@@ -2,7 +2,10 @@
   <div v-if="!mobile" class="app flex flex-column">
     <Navigation />
     <div class="app-content flex flex-column">
-      <invoice-modal v-if="invoiceModal"></invoice-modal>
+      <transition name="invoice">
+        <invoice-modal v-if="invoiceModal"></invoice-modal>
+      </transition>
+
       <router-view />
     </div>
   </div>
@@ -32,7 +35,7 @@ export default {
       mobile.value = false;
     };
     const invoiceModal = computed(() => store.state.invoiceModal); // ref
-    
+
     window.addEventListener("resize", checkScreen);
     return {
       mobile,
