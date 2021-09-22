@@ -1,6 +1,7 @@
 <template>
   <div @click="checkClick" class="invoice-wrap flex flex-column">
     <form class="invoice-content" @submit.prevent="submitForm">
+      <loading v-show="loading" />
       <h1>New Invoice</h1>
       <!-- Bill From -->
       <div class="bill-from flex flex-column">
@@ -185,9 +186,14 @@
 <script>
 import { reactive, toRefs, watch } from "vue";
 import { useStore } from "vuex";
-import { uid } from 'uid';
+import { uid } from "uid";
+import { invoicsCollectionRef, addDoc } from "../firebase/firebaseInit";
+import Loading from './Loading.vue';
 export default {
   name: "InvoiceModal",
+  components:{
+    Loading
+  },
   setup() {
     const data = reactive({
       dateOptions: { year: "numeric", month: "short", day: "numeric" },
@@ -237,21 +243,75 @@ export default {
     );
     const addNewInvoiceItem = () => {
       data.invoiceItemList.push({
-        id:uid(),
-        itemName : "",
-        qty:"",
-        price:0,
-        total:0
+        id: uid(),
+        itemName: "",
+        qty: "",
+        price: 0,
+        total: 0,
       });
     };
-    const deleteInvoiceItem = (id) =>{
-        data.invoiceItemList = data.invoiceItemList.filter((item) => item.id !== id)
+    const deleteInvoiceItem = (id) => {
+      data.invoiceItemList = data.invoiceItemList.filter(
+        (item) => item.id !== id
+      );
+    };
+    const calInvoiceTotal = () => {
+      data.invoiceTotal = 0;
+      data.invoiceItemList.forEach((item) => {
+        data.invoiceTotal += item.total;
+      });
+    };
+    const publishInvoice = () => {
+      data.invoicePending = true;
+    };
+    const saveDraft = () => {
+      data.invoiceDraft = true;
+    };
+    const uploadInvoice = async () => {
+      if (data.invoiceItemList.length <= 0) {
+        alert("Please ensure you filled out work items!");
+        return;
+      }
+      data.loading = true;
+      calInvoiceTotal();
+      await addDoc(invoicsCollectionRef, {
+        invoiceId: uid(6),
+        billerStreetAddress: data.billerStreetAddress,
+        billerCity: data.billerCity,
+        billerZipCode: data.billerZipCode,
+        billerCountry: data.billerCountry,
+        clientName: data.clientName,
+        clientEmail: data.clientEmail,
+        clientStreetAddress: data.clientStreetAddress,
+        clientCity: data.clientCity,
+        clientZipCode: data.clientZipCode,
+        clientCountry: data.clientCountry,
+        invoiceDate: data.invoiceDate,
+        invoiceDateUnix: data.invoiceDateUnix,
+        paymentTerms: data.paymentTerms,
+        paymentDueDate: data.paymentDueDate,
+        paymentDueDateUnix: data.paymentDueDateUnix,
+        productDescription: data.productDescription,
+        invoiceItemList: data.invoiceItemList,
+        invoiceTotal: data.invoiceTotal,
+        invoicePending: data.invoicePending,
+        invoiceDraft: data.invoiceDraft,
+        invoicePaid: null,
+      });
+       data.loading = false;
+      closeInvoice();
+    };
+    const submitForm = () => {
+      uploadInvoice();
     };
     return {
       ...toRefs(data),
       closeInvoice,
       addNewInvoiceItem,
-      deleteInvoiceItem
+      deleteInvoiceItem,
+      publishInvoice,
+      saveDraft,
+      submitForm,
     };
   },
 };
@@ -362,7 +422,6 @@ export default {
           width: 100%;
           img {
             margin-right: 4px;
-    
           }
         }
       }
