@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import { getFirestore, collection, addDoc ,getDocs } from "firebase/firestore";
+import { getFirestore, collection, addDoc ,getDocs, updateDoc,  doc } from "firebase/firestore";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCAsLaMXb8iWHoq0mrAND9-zCEjVBRYjWE",
@@ -18,4 +18,4 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 const db = getFirestore();
 const invoicsCollectionRef = collection(db, "invoices");
-export {  invoicsCollectionRef, addDoc ,getDocs };
+export {  invoicsCollectionRef, addDoc ,getDocs ,  doc , updateDoc};

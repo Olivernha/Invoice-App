@@ -24,16 +24,27 @@
         </div>
       </div>
     </div>
+    <div v-if="invoiceData.length > 0">
+      <Invoice v-for="(invoice,index) in invoiceData" :invoice="invoice" :key="index"></Invoice>
+    </div>
+    <div v-else class="empty flex flex-column">
+      <img src="@/assets/illustration-empty.svg" alt="" />
+      <h3>There is nothing here</h3>
+      <p>Create a new invoice by clicking the New Invoice button and get started</p>
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import { ref } from "vue";
+import { ref ,computed } from "vue";
 import { useStore } from "vuex";
+import Invoice from "../components/Invoice";
 export default {
   name: "Home",
-  components: {},
+  components: {
+    Invoice
+  },
   setup() {
     const filterMenu = ref(null);
     const store = useStore();
@@ -41,11 +52,12 @@ export default {
     const toggleFilterMenu = () => {
       filterMenu.value = !filterMenu.value;
     };
-
+    const invoiceData = computed(() => store.state.invoiceData);
     return {
       filterMenu,
       toggleFilterMenu,
       newInvoice,
+      invoiceData
     };
   },
 };
@@ -101,7 +113,7 @@ export default {
       .button {
         padding: 8px 10px;
         background-color: #7c5dfa;
-      
+
         border-radius: 40px;
         .inner-button {
           margin-right: 8px;

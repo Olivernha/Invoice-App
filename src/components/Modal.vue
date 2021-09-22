@@ -12,21 +12,28 @@
 
 <script>
 import { useStore } from "vuex";
+import {computed} from "vue";
+
 export default {
   name: "Modal",
   setup() {
     const store = useStore();
+    const editInvoice = computed(()=> store.state.editInvoice);
     function closeModal() {
       store.commit("TOGGLE_MODAL");
     }
     function closeInvoice() {
       closeModal();
       store.commit("TOGGLE_INVOICE");
+      if(editInvoice.value){
+        store.commit('TOGGLE_EDIT_INVOICE')
+      }
     }
 
     return {
       closeModal,
       closeInvoice,
+      editInvoice
     };
   },
 };
