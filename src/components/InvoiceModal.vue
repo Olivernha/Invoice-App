@@ -1,5 +1,9 @@
 <template>
-  <div @click="checkClick" class="invoice-wrap flex flex-column">
+  <div
+    @click="checkClick"
+    class="invoice-wrap flex flex-column"
+    ref="invoiceWrap"
+  >
     <form class="invoice-content" @submit.prevent="submitForm">
       <loading v-show="loading" />
       <h1>New Invoice</h1>
@@ -184,15 +188,15 @@
 </template>
 
 <script>
-import { reactive, toRefs, watch } from "vue";
+import { reactive, toRefs, watch,ref } from "vue";
 import { useStore } from "vuex";
 import { uid } from "uid";
 import { invoicsCollectionRef, addDoc } from "../firebase/firebaseInit";
-import Loading from './Loading.vue';
+import Loading from "./Loading.vue";
 export default {
   name: "InvoiceModal",
-  components:{
-    Loading
+  components: {
+    Loading,
   },
   setup() {
     const data = reactive({
@@ -298,11 +302,17 @@ export default {
         invoiceDraft: data.invoiceDraft,
         invoicePaid: null,
       });
-       data.loading = false;
+      data.loading = false;
       closeInvoice();
     };
     const submitForm = () => {
       uploadInvoice();
+    };
+    const invoiceWrap = ref(null);
+    const checkClick = (e) => {
+      if (e.target === invoiceWrap.value) {
+        store.commit("TOGGLE_MODAL");
+      }
     };
     return {
       ...toRefs(data),
@@ -312,6 +322,8 @@ export default {
       publishInvoice,
       saveDraft,
       submitForm,
+      checkClick,
+      invoiceWrap,
     };
   },
 };

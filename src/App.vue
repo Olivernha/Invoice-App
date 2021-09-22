@@ -2,6 +2,7 @@
   <div v-if="!mobile" class="app flex flex-column">
     <Navigation />
     <div class="app-content flex flex-column">
+      <modal v-if="$store.state.modalActive"/>
       <transition name="invoice">
         <invoice-modal v-if="invoiceModal"></invoice-modal>
       </transition>
@@ -21,8 +22,9 @@ import Navigation from "./components/Navigation";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import InvoiceModal from "./components/InvoiceModal.vue";
+import Modal from './components/Modal.vue';
 export default {
-  components: { Navigation, InvoiceModal },
+  components: { Navigation, InvoiceModal , Modal },
   setup() {
     const mobile = ref(null);
     const store = useStore();
