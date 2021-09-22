@@ -1,31 +1,35 @@
 <template>
   <div class="home container">
+    <!-- Header -->
     <div class="header flex">
       <div class="left flex flex-column">
         <h1>Invoices</h1>
-        <span>There are 4 total invoices</span>
+        <span>There are {{ invoiceData.length }} total invoices</span>
       </div>
-
       <div class="right flex">
         <div @click="toggleFilterMenu" class="filter flex">
-          <span>Filter by status</span>
+          <span
+          >Filter by status <span v-if="filteredInvoice">: {{ filteredInvoice }}</span></span
+          >
           <img src="@/assets/icon-arrow-down.svg" alt="" />
-          <ul class="filter-menu" v-show="filterMenu">
-            <li>Draft</li>
-            <li>Pending</li>
-            <li>Paid</li>
-            <li>Clear Filter</li>
+          <ul v-show="filterMenu" class="filter-menu">
+            <li @click="filteredInvoices">Draft</li>
+            <li @click="filteredInvoices">Pending</li>
+            <li @click="filteredInvoices">Paid</li>
+            <li @click="filteredInvoices">Clear Filter</li>
           </ul>
         </div>
         <div @click="newInvoice" class="button flex">
           <div class="inner-button flex">
             <img src="@/assets/icon-plus.svg" alt="" />
           </div>
+          <span>New Invoice</span>
         </div>
       </div>
     </div>
+    <!-- Invoices -->
     <div v-if="invoiceData.length > 0">
-      <Invoice v-for="(invoice,index) in invoiceData" :invoice="invoice" :key="index"></Invoice>
+      <Invoice v-for="(invoice, index) in filteredData" :invoice="invoice" :key="index" />
     </div>
     <div v-else class="empty flex flex-column">
       <img src="@/assets/illustration-empty.svg" alt="" />
@@ -47,17 +51,42 @@ export default {
   },
   setup() {
     const filterMenu = ref(null);
+    const filteredInvoice = ref(null);
     const store = useStore();
     const newInvoice = () => store.commit("TOGGLE_INVOICE");
     const toggleFilterMenu = () => {
       filterMenu.value = !filterMenu.value;
     };
+    const filteredInvoices = (e) =>{
+      if (e.target.innerText === "Clear Filter") {
+        filteredInvoice.value = null;
+        return;
+      }
+      filteredInvoice.value = e.target.innerText;
+    }
     const invoiceData = computed(() => store.state.invoiceData);
+    const filteredData  = computed(() =>{
+      return invoiceData.value.filter((invoice) => {
+        if (filteredInvoice.value === "Draft") {
+          return invoice.invoiceDraft === true;
+        }
+        if (filteredInvoice.value === "Pending") {
+          return invoice.invoicePending === true;
+        }
+        if (filteredInvoice.value === "Paid") {
+          return invoice.invoicePaid === true;
+        }
+        return invoice;
+      });
+    })
     return {
       filterMenu,
       toggleFilterMenu,
       newInvoice,
-      invoiceData
+      invoiceData,
+      filteredInvoice,
+      filteredInvoices,
+      filteredData
     };
   },
 };

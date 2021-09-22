@@ -22,8 +22,8 @@
       </div>
       <div class="right flex">
         <button @click="toggleEditInvoice" class="dark-purple">Edit</button>
-        <button class="red">Delete</button>
-        <button  class="green">
+        <button @click="deleteInvoice(currentInvoice.docId)" class="red">Delete</button>
+        <button @click="updateStatusToPaid(currentInvoice.docId)" v-if="currentInvoice.invoicePending" class="green">
           Mark as Paid
         </button>
         <button
@@ -100,7 +100,7 @@
 
 import {computed, ref,watch} from "vue";
 import {useStore} from "vuex";
-import {useRoute} from 'vue-router';
+import {useRoute ,useRouter} from 'vue-router';
 
 export default {
   name: "InvoiceView",
@@ -108,6 +108,7 @@ export default {
     const currentInvoice = ref(null);
     const store = useStore();
     const route = useRoute();
+    const router = useRouter();
     const getCurrentInvoice = () => store.commit('SET_CURRENT_INVOICE', route.params.invoiceId);
     getCurrentInvoice();
     const currentInvoiceArray = computed(() => store.state.currentInvoiceArray);
@@ -117,8 +118,18 @@ export default {
       store.commit('TOGGLE_EDIT_INVOICE');
       store.commit('TOGGLE_INVOICE');
     }
-    watch(editInvoice,()=>{
-      if(!editInvoice.value){
+    const deleteInvoice = async (docId) =>{
+      await store.dispatch('DELETE_INVOICE',docId);
+      router.push({name :"Home"});
+    }
+    const updateStatusToPaid = (docId) =>{
+      store.dispatch('UPDATE_STATUS_TO_PAID',docId);
+    }
+    const updateStatusToPending = (docId) =>{
+      store.dispatch('UPDATE_STATUS_TO_PENDING',docId)
+    }
+    watch(editInvoice,(newValue)=>{
+      if(!newValue){
         currentInvoice.value = currentInvoiceArray.value[0];
       }
     })
@@ -126,7 +137,9 @@ export default {
       getCurrentInvoice,
       currentInvoice,
       toggleEditInvoice,
-
+      deleteInvoice,
+      updateStatusToPaid,
+      updateStatusToPending
     }
   }
 }

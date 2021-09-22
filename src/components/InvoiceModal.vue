@@ -340,6 +340,7 @@ export default {
       });
       data.loading = false;
       closeInvoice();
+      store.dispatch('GET_INVOICES');
     };
     const UPDATE_INVOICE = (d) => store.dispatch('UPDATE_INVOICE',d);
     const updateInvoice = async () => {
