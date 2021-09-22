@@ -6,12 +6,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc ,getDocs, updateDoc,  doc,deleteDoc  } from "firebase/firestore";
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCAsLaMXb8iWHoq0mrAND9-zCEjVBRYjWE",
-  authDomain: "invoice-app-01.firebaseapp.com",
-  projectId: "invoice-app-01",
-  storageBucket: "invoice-app-01.appspot.com",
-  messagingSenderId: "273310150255",
-  appId: "1:273310150255:web:d796be872bb95eb789e79a",
+
 };
 
 // Initialize Firebase
