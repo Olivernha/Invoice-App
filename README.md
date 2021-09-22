@@ -1,24 +1,21 @@
-# vue-invoice-app
+# Frontend Mentor - Invoice app solution
 
-## Project setup
-```
-yarn install
-```
+This is a solution to the [Invoice app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/invoice-app-i7KaLTQjl). Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+### Screenshot
 
-### Compiles and minifies for production
-```
-yarn build
-```
+screenshot.png
 
-### Lints and fixes files
-```
-yarn lint
-```
+### Links
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- Live Site URL: https://invoice-vue3-app.netlify.app/
+
+## My process
+
+### Built with
+
+- Vue 3
+- Composition Api
+- SASS
+- Firebase
+- Vuex /VueRouter
