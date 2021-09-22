@@ -185,7 +185,7 @@
 <script>
 import { reactive, toRefs, watch } from "vue";
 import { useStore } from "vuex";
-
+import { uid } from 'uid';
 export default {
   name: "InvoiceModal",
   setup() {
@@ -235,11 +235,24 @@ export default {
         ).toLocaleDateString("en-us", data.dateOptions);
       }
     );
+    const addNewInvoiceItem = () => {
+      data.invoiceItemList.push({
+        id:uid(),
+        itemName : "",
+        qty:"",
+        price:0,
+        total:0
+      });
+    };
+    const deleteInvoiceItem = (id) =>{
+        data.invoiceItemList = data.invoiceItemList.filter((item) => item.id !== id)
+    };
     return {
       ...toRefs(data),
       closeInvoice,
+      addNewInvoiceItem,
+      deleteInvoiceItem
     };
-   
   },
 };
 </script>
@@ -337,6 +350,7 @@ export default {
               right: 0;
               width: 12px;
               height: 16px;
+              cursor: pointer;
             }
           }
         }
@@ -348,6 +362,7 @@ export default {
           width: 100%;
           img {
             margin-right: 4px;
+    
           }
         }
       }
