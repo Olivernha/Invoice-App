@@ -1,5 +1,6 @@
 <template>
-  <div v-if="!mobile" class="app flex flex-column">
+  <div v-if="invoicesLoaded">
+     <div v-if="!mobile" class="app flex flex-column">
     <Navigation />
     <div class="app-content flex flex-column">
       <modal v-if="$store.state.modalActive"/>
@@ -14,20 +15,23 @@
     <h2>Sorry, this app is not supported on Mobile Devices</h2>
     <p>To use this app, please use a computer or Tablet</p>
   </div>
+  </div>
 </template>
 
 <script>
 import Navigation from "./components/Navigation";
 
-import { ref, computed } from "vue";
+import { ref, computed} from "vue";
 import { useStore } from "vuex";
 import InvoiceModal from "./components/InvoiceModal.vue";
 import Modal from './components/Modal.vue';
 export default {
   components: { Navigation, InvoiceModal , Modal },
   setup() {
+    
     const mobile = ref(null);
     const store = useStore();
+    store.dispatch('GET_INVOICES');
     const checkScreen = () => {
       const windowWidth = window.innerWidth;
       if (windowWidth <= 750) {
@@ -37,12 +41,13 @@ export default {
       mobile.value = false;
     };
     const invoiceModal = computed(() => store.state.invoiceModal); // ref
-
+    const invoicesLoaded= computed(() => store.getters.invoicesLoaded);
     window.addEventListener("resize", checkScreen);
     return {
       mobile,
       checkScreen,
       invoiceModal,
+      invoicesLoaded
     };
   },
 };
